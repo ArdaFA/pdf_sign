@@ -40,7 +40,7 @@ class _CreateSignatureState extends State<CreateSignature> {
                 builder: (context, child) {
                   return CustomPaint(
                     painter: SignaturePainter(_signatureController.points),
-                    child: Container(color: Colors.white),
+                    child: Container(color: Colors.transparent), // Has to be transparent, otherwise it comes over and blocks the signature
                   );
                 },
               ),
@@ -61,7 +61,7 @@ class _CreateSignatureState extends State<CreateSignature> {
                   onPressed: () async {
                     final canvasSize = MediaQuery.of(context).size;
                     final image = await _signatureController.getSignatureImage(canvasSize);
-                    // Do something with the image (e.g., save or share)
+                    // Doing something with the image (e.g., save or share)
                   },
                   child: Text('Save'),
                 ),

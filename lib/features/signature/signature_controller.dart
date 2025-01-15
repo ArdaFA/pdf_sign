@@ -1,7 +1,9 @@
 // logic for handling signature input
 
+import 'dart:io';
 import 'dart:ui' as dart_ui;
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 class SignatureController extends ChangeNotifier {
   List<Offset?> _points = []; // List to store signature points

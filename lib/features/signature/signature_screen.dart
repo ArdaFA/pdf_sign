@@ -1,6 +1,9 @@
 // UI for capturing signatures
 
+import 'dart:io';
+import 'dart:ui' as dart_ui;
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'signature_controller.dart';
 
 class CreateSignature extends StatefulWidget {
@@ -11,6 +14,17 @@ class CreateSignature extends StatefulWidget {
 class _CreateSignatureState extends State<CreateSignature> {
   final SignatureController _signatureController = SignatureController(); // Instance of the controller
 
+
+  Future<String> saveSignatureAsPNG(dart_ui.Image image) async {
+    final byteData = await image.toByteData(format: dart_ui.ImageByteFormat.png);
+    final buffer = byteData!.buffer.asUint8List();
+
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/signature.png');
+    await file.writeAsBytes(buffer);
+
+    return file.path; // Return the path to the saved file
+  }
   @override
   void dispose() {
     _signatureController.dispose();
@@ -61,7 +75,26 @@ class _CreateSignatureState extends State<CreateSignature> {
                   onPressed: () async {
                     final canvasSize = MediaQuery.of(context).size;
                     final image = await _signatureController.getSignatureImage(canvasSize);
-                    // Doing something with the image (e.g., save or share)
+
+                    // Save the image as PNG
+                    final filePath = await saveSignatureAsPNG(image);
+
+                    // Optionally, you can show a dialog or confirmation
+                    showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        title: Text('Signature Saved'),
+                        content: Text('Signature saved to $filePath'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      ),
+                    );
                   },
                   child: Text('Save'),
                 ),

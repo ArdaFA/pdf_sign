@@ -69,6 +69,12 @@ class _CreateSignatureState extends State<CreateSignature> {
                     ElevatedButton(
                       onPressed: () {
                         // how to use this generated signature?
+                        /*
+                        *  1. Save like normal
+                        *  2. reach the sign via path
+                        *  3. paste it on the current pdf file
+                        *
+                        * */
                       },
                       child: Text('Use this Signature'),
                     ),

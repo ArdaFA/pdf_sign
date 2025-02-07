@@ -4,6 +4,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'pdf_viewer_controller.dart';  // Import the controller
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:file_picker/file_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:image/image.dart' as img;
 
 class PdfViewerScreen extends StatefulWidget {
   @override
@@ -27,6 +34,45 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
         isAnyFilePicked = true;
       });
     }
+  }
+
+  Future<void> signPdf(Uint8List signatureBytes) async {
+    // 1. Pick a PDF file
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
+
+    if (result == null) return;
+
+    File pdfFile = File(result.files.single.path!);
+    final Uint8List pdfBytes = await pdfFile.readAsBytes();
+
+    // 2. Load PDF
+    final pdf = pw.Document();
+
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Stack(
+            children: [
+              pw.Image(pw.MemoryImage(pdfBytes)), // Load existing PDF
+              pw.Positioned(
+                left: 100, // Adjust X coordinate
+                bottom: 50, // Adjust Y coordinate
+                child: pw.Image(pw.MemoryImage(signatureBytes), width: 150, height: 50),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+
+    // 3. Save the new PDF
+    Directory directory = await getApplicationDocumentsDirectory();
+    String outputPath = "${directory.path}/signed_document.pdf";
+
+    final signedPdf = File(outputPath);
+    await signedPdf.writeAsBytes(await pdf.save());
+
+    print("Signed PDF saved at: $outputPath");
   }
 
   @override

@@ -103,6 +103,7 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
                   ElevatedButton(onPressed: pickPDFfile, child: Text('Pick Again')),
                   ElevatedButton(onPressed: () {
                     Navigator.pushNamed(context, '/create_signature');
+                    // i dont know what to do :(
                   }, child: Text('Sign')),
                 ],
               ),

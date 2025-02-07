@@ -62,41 +62,58 @@ class _CreateSignatureState extends State<CreateSignature> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            child: Column(
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    _signatureController.clear();
-                  },
-                  child: Text('Clear'),
+                Row(mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        // how to use this generated signature?
+                      },
+                      child: Text('Use this Signature'),
+                    ),
+                  ],
                 ),
-                ElevatedButton(
-                  onPressed: () async {
-                    final canvasSize = MediaQuery.of(context).size;
-                    final image = await _signatureController.getSignatureImage(canvasSize);
-
-                    // Save the image as PNG
-                    final filePath = await saveSignatureAsPNG(image);
-
-                    // Optionally, you can show a dialog or confirmation
-                    showDialog(
-                      context: context,
-                      builder: (_) => AlertDialog(
-                        title: Text('Signature Saved'),
-                        content: Text('Signature saved to $filePath'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('OK'),
-                          ),
-                        ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 110.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          _signatureController.clear();
+                        },
+                        child: Text('Clear'),
                       ),
-                    );
-                  },
-                  child: Text('Save'),
+                      ElevatedButton(
+                        onPressed: () async {
+                          final canvasSize = MediaQuery.of(context).size;
+                          final image = await _signatureController.getSignatureImage(canvasSize);
+
+                          // Save the image as PNG
+                          final filePath = await saveSignatureAsPNG(image);
+
+                          // Optionally, you can show a dialog or confirmation
+                          showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              title: Text('Signature Saved'),
+                              content: Text('Signature saved to $filePath'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        child: Text('Save'),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

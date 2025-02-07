@@ -14,6 +14,8 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
   File? pdfFile; // The selected PDF file
   final PdfViewerController _controller = PdfViewerController(); // Controller instance
 
+  bool isAnyFilePicked = false;
+
   // Method to pick a PDF file
   Future<void> pickPDFfile() async {
     // Use the controller to pick a file
@@ -22,6 +24,7 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
     if (file != null) {
       setState(() {
         pdfFile = file; // Update the state with the selected file
+        isAnyFilePicked = true;
       });
     }
   }
@@ -39,7 +42,7 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
               onPressed: pickPDFfile,
               child: Text('Pick a File'),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 12),
             // If a file is selected, display the PDF viewer
             if (pdfFile != null)
               Expanded(
@@ -47,6 +50,17 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
                   filePath: pdfFile!.path,
                 ),
               ),
+            const SizedBox(height: 12),
+            if (pdfFile != null)
+              Row( mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(onPressed: pickPDFfile, child: Text('Pick Again')),
+                  ElevatedButton(onPressed: () {
+                    Navigator.pushNamed(context, '/create_signature');
+                  }, child: Text('Sign')),
+                ],
+              ),
+            const SizedBox(height: 12,)
           ],
         ),
       ),
